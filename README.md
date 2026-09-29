@@ -1,7 +1,7 @@
 # Nexora Contact Centre — System Architecture & Engineering Case Study
 
 > **A high-throughput, multi-tenant call logging, telemetry, and reporting platform engineered for enterprise contact centres.**  
-> *Architected and engineered by [Janindu Gayanga](https://github.com/jani358).*
+> *Designed and engineered by [Janindu Gayanga](https://github.com/jani358).*
 
 [![Stack](https://img.shields.io/badge/Architecture-Modular%20Monolith-blue.svg)](#3-system-architecture)
 [![Backend](https://img.shields.io/badge/API-NestJS%2010%20%7C%20TypeScript-E0234E.svg)](#5-technology-stack--rationale)
@@ -175,12 +175,12 @@ sequenceDiagram
 
 ---
 
-## 9. Author & Solutions Architect
+## 9. Author & Engineer
 
 **Janindu Gayanga**  
-*Senior Full-Stack Software Engineer & Solutions Architect*  
+*Full-Stack Software Engineer*  
 - **GitHub:** [@jani358](https://github.com/jani358)  
-- **Focus Areas:** Scalable System Design, High-Throughput Node.js/TypeScript Architectures, Enterprise Web Applications, Distributed Systems.
+- **Focus Areas:** High-Performance Web Applications, Node.js & TypeScript Architectures, Database Modeling, REST APIs.
 
 ---
 
