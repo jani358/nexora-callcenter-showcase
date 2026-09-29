@@ -179,8 +179,12 @@ sequenceDiagram
 
 **Janindu Gayanga**  
 *Full-Stack Software Engineer*  
+- **Website / Portfolio:** [iamjanindu.com](https://iamjanindu.com)  
+- **LinkedIn:** [janindu-gayanga](https://www.linkedin.com/in/janindu-gayanga-02ba60217)  
 - **GitHub:** [@jani358](https://github.com/jani358)  
+- **Email:** [janindugayanga10@gmail.com](mailto:janindugayanga10@gmail.com)  
 - **Focus Areas:** High-Performance Web Applications, Node.js & TypeScript Architectures, Database Modeling, REST APIs.
+
 
 ---
 
