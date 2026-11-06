@@ -30,8 +30,8 @@ Enterprise contact centres handle thousands of inbound customer calls daily. Whe
 ### Core Platform Capabilities
 - **Dynamic Field Engine:** Administrators configure category-specific fields dynamically at runtime without database schema migrations.
 - **Fail-Open Autosave & Draft Recovery:** Real-time state preservation ensures agents never lose in-progress conversation notes during sudden network drops.
-- **Sub-50ms Repeat Caller Resolution:** Phone number normalization (E.164 standard) paired with indexed equality enables instantaneous recognition of returning customers.
-- **Real-Time Supervisor Telemetry & Reporting:** High-throughput full-text search with automated CSV stream generation, protected against formula injection.
+- **Repeat Caller Resolution:** Phone number normalization (E.164 standard) paired with an indexed equality lookup recognises returning customers.
+- **Supervisor Reporting:** Full-text search, median handle-time reports and CSV export, protected against formula injection.
 
 ---
 
@@ -168,7 +168,7 @@ sequenceDiagram
 
 ## 8. Engineering Highlights & Metrics
 
-* **Search Performance:** Full-text search queries execute in `< 45ms` across 100,000+ call records using PostgreSQL GIN indexing.
+* **Search:** Full-text search on a weighted `tsvector` column with a GIN index, plus keyset (cursor) pagination instead of OFFSET. No formal load test has been run yet.
 * **Idempotency Guarantee:** 100% duplicate prevention under rapid double-click stress testing.
 * **Zero Downtime Schema Changes:** New form fields and categories deploy in `0.0 seconds` via administrative JSON configurations.
 * **Resilience:** Continuous operation maintained during simulated Redis failovers with zero data loss.
