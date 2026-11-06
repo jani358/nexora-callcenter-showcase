@@ -51,7 +51,7 @@ erDiagram
        setweight(to_tsvector('english', coalesce(notes, '')), 'C')
    ) STORED;
    ```
-   A **GIN (Generalized Inverted Index)** on `search_vector` delivers sub-50ms search execution across millions of customer call records.
+   A **GIN (Generalized Inverted Index)** on `search_vector` keeps search fast as call records grow, without scanning the table.
 
 ---
 
@@ -99,6 +99,6 @@ Multi-tenancy is enforced through programmatic query scoping at the data layer:
 
 ## 5. Scalability Roadmap
 
-1. **Phase 1 (1–50 Agents, <10k calls/day):** Single VPS with Docker Compose (PostgreSQL 16, Redis 7, NestJS API, Next.js Web). Sub-100ms response times.
+1. **Phase 1 (1–50 Agents, <10k calls/day):** Single VPS with Docker Compose (PostgreSQL 16, Redis 7, NestJS API, Next.js Web).
 2. **Phase 2 (50–500 Agents, <200k calls/day):** Managed PostgreSQL (with Read Replica dedicated to supervisor analytics) and external Redis cluster.
 3. **Phase 3 (Enterprise Scale, Millions of calls):** Monthly PostgreSQL table partitioning on `calls` (`PARTITION BY RANGE (created_at)`), ensuring index trees remain cached in RAM.
