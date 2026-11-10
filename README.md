@@ -25,7 +25,7 @@ Enterprise contact centres handle thousands of inbound customer calls daily. Whe
 
 ## 2. The Architectural Solution: Nexora Platform
 
-**Nexora** was designed to replace ad-hoc logging with a unified, real-time platform that prioritizes **Zero-Loss Call Capture**, **Sub-Second Historical Retrieval**, and **Data-Driven Dynamic Schemas**.
+**Nexora** was designed to replace ad-hoc logging with one platform that focuses on **Zero-Loss Call Capture**, **Fast Historical Search**, and **Data-Driven Dynamic Schemas**.
 
 ### Core Platform Capabilities
 - **Dynamic Field Engine:** Administrators configure category-specific fields dynamically at runtime without database schema migrations.
@@ -117,8 +117,8 @@ graph TD
 | **Web Frontend** | **Next.js 14 (App Router)** | Hybrid rendering: Server Components for static shells and data-heavy supervisor reports; Client Components for responsive agent call logs. |
 | **State Management** | **TanStack Query + Zustand** | Clean separation of Server State (cache invalidation, retries) and Client State (draft call forms, UI drawers). |
 | **API Framework** | **NestJS 10 (TypeScript)** | Enterprise-grade structure: declarative Decorators, Guards, Interceptors, and Dependency Injection for testable domain modules. |
-| **Database** | **PostgreSQL 16 + Prisma** | Relational integrity with ACID compliance, combined with native `JSONB` query operations and `tsvector` GIN indexes for sub-second full-text search. |
-| **Caching & Pub/Sub** | **Redis 7** | Sub-millisecond sliding window rate limiting and real-time supervisor stream fan-out. |
+| **Database** | **PostgreSQL 16 + Prisma** | Relational integrity with ACID compliance, combined with native `JSONB` query operations and `tsvector` GIN indexes for full-text search. |
+| **Rate limiting** | **Redis 7** | Sliding-window rate limiting. If Redis is down, the limiter fails open so agents can keep saving calls. |
 | **Security & Auth** | **JWT with Refresh Rotation** | Short-lived Access Tokens (15m) paired with rotating Refresh Tokens featuring family-scoped reuse detection. |
 | **Deployment** | **Docker Compose & Caddy** | Multi-container orchestration with automated Zero-SSL TLS reverse proxy routing. |
 
@@ -128,7 +128,7 @@ graph TD
 
 * ❌ **MongoDB / Pure NoSQL:** Rejected because contact centre operations demand strict relational integrity between Tenants, Agents, Calls, and Audits. PostgreSQL `JSONB` provides document flexibility with full relational safety.
 * ❌ **Premature Microservices:** Rejected because network hops, distributed transactions (Saga/2PC), and eventual consistency would introduce unnecessary failure modes and latency during live call handling.
-* ❌ **Elasticsearch Cluster:** Rejected because maintaining and syncing an external Lucene cluster adds massive operational overhead. PostgreSQL's native `tsvector` with GIN indexing delivers <30ms search latency on hundreds of thousands of records.
+* ❌ **Elasticsearch Cluster:** Rejected because maintaining and syncing an external Lucene cluster adds massive operational overhead. PostgreSQL's native `tsvector` with a GIN index covers this data size without running and syncing a second system.
 
 ---
 
@@ -156,12 +156,7 @@ sequenceDiagram
         DB-->>API: Transaction Committed
     end
 
-    API--)Cache: Publish call.created event (Fire & Forget)
     API-->>Agent: 201 Created (Call Record & ID)
-    
-    opt Redis Available
-        Cache--)Supervisor: Real-time Live Telemetry Update
-    end
 ```
 
 ---
@@ -169,9 +164,9 @@ sequenceDiagram
 ## 8. Engineering Highlights & Metrics
 
 * **Search:** Full-text search on a weighted `tsvector` column with a GIN index, plus keyset (cursor) pagination instead of OFFSET. No formal load test has been run yet.
-* **Idempotency Guarantee:** 100% duplicate prevention under rapid double-click stress testing.
-* **Zero Downtime Schema Changes:** New form fields and categories deploy in `0.0 seconds` via administrative JSON configurations.
-* **Resilience:** Continuous operation maintained during simulated Redis failovers with zero data loss.
+* **Idempotency:** in the integration tests, 10 saves at the same moment with one idempotency key create exactly one call.
+* **No-deploy schema changes:** form fields and categories are data, so an admin adds one without a code change or a deploy.
+* **Resilience:** calls are saved in PostgreSQL; if Redis is down, rate limiting fails open instead of blocking saves.
 
 ---
 
